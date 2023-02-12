@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
-using Telegram.Bot;
-using Telegram.Bot.Types;
+using static YouTubeMusicBot.Constans;
 
 namespace YouTubeMusicBot
 {
@@ -10,32 +9,13 @@ namespace YouTubeMusicBot
         {
             var token = ConfigurationManager.AppSettings["APIKey"];
 
-            var client = new TelegramBotClient(token);
-
-            client.StartReceiving(UpdateHandlerAsync, ErrorHandlerAsync);
-            Console.ReadLine();
-        }
-
-        private static async Task ErrorHandlerAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static async Task UpdateHandlerAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-        {
-            if (update.Message is not { } message)
+            if (token != null && token != Config.YourApiKey)
             {
-                return;
+                new TelegramBot(token).Run();
             }
-
-            if (message.Text is not { } messageText)
+            else
             {
-                return;
-            }
-
-            if (messageText.ToLower() == "hello")
-            {
-                await botClient.SendTextMessageAsync(message.Chat.Id, $"Hello {message.Chat.Username}");
+                Console.WriteLine("API Key is not found");
             }
         }
     }
